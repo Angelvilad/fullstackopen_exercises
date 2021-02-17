@@ -3,6 +3,13 @@ import ReactDOM from 'react-dom'
 
 const Statistics = ({statistics}) => {
   const {good, neutral, bad, total, average, positive} = statistics;
+  if (total === 0) {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
   
   return (
     <div>
