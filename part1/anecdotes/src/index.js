@@ -5,6 +5,16 @@ const App = (props) => {
   
   const [selected, setSelected] = useState(0);
   const [vote, setVote] = useState({0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0});
+  
+  const retrieveMostVotedKey = () => {
+    let mostVotedKey=0;
+    for (let key in vote) {
+      if (vote[key] > vote[mostVotedKey]) mostVotedKey = key;
+    }
+    return mostVotedKey;
+  }
+
+  const mostVotedKey = retrieveMostVotedKey();
 
   const handleNextAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * 6);
@@ -19,6 +29,7 @@ const App = (props) => {
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       {props.anecdotes[selected]}
       <div>
         <p>has {vote[selected]} votes</p>
@@ -28,6 +39,10 @@ const App = (props) => {
         <button onClick={handleNextAnecdote}>
           next anecdote
         </button>
+        <div>
+          <h2>Anecdote with most votes</h2>
+          <p>{ vote[mostVotedKey] > 0 ? props.anecdotes[mostVotedKey] : 'no votes yet' } </p>
+        </div>
       </div>
     </div>
   )
