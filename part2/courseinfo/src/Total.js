@@ -1,9 +1,7 @@
 const Total = ({parts}) => {
   
-  var total = 0;
+  var total = parts.reduce((accumulator, item) => accumulator + item.exercises, 0);
 
-  parts.forEach(part => total += part.exercises);
-  
   return (
     <p>Number of exercises {total}</p>
   )
