@@ -14,9 +14,15 @@ const App = () => {
     event.preventDefault();
 
     const newPerson = {name: newName};
-    setPersons(persons.concat(newPerson));
 
-    setNewName('');
+    const isNameDuplicated = persons.some(person => person.name === newName);
+
+    if(!isNameDuplicated) {
+      setPersons(persons.concat(newPerson));
+      setNewName('');
+    } else {
+      window.alert(`${newName} is already added to phonebook`);
+    }
   }
 
   return (
