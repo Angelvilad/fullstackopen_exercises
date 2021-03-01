@@ -1,9 +1,10 @@
 import DetailCountry from './DetailCountry.js';
+import Country from './Country.js';
 
 const Countries = ({countries, filter}) =>{
   
   const countriesFiltered = filter
-    ? countries.filter(countrie => countrie.name.toLowerCase().includes(filter.toLowerCase()))
+    ? countries.filter(country => country.name.toLowerCase().includes(filter.toLowerCase()))
     : [];
 
   if (countriesFiltered.length === 1) {
@@ -16,7 +17,7 @@ const Countries = ({countries, filter}) =>{
     {
       countriesFiltered.length > 10
         ? <p>Too many matches, specify another filter</p>
-        : countriesFiltered.map(countrie => <p key={countrie.name}>{countrie.name}</p>)
+        : countriesFiltered.map(country => <Country key={country.name} country={country}/>)
     }
     </div>
   )
