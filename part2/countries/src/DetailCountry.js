@@ -1,3 +1,5 @@
+import Weather from './Weather.js';
+
 const DetailCountry = ({country}) => {
 
   return (
@@ -12,6 +14,7 @@ const DetailCountry = ({country}) => {
       }
       </ul>
       <img alt={`${country.name} flag`} src={country.flag} style={{width: '10%'}} />
+      <Weather capital={country.capital} />
     </div>
   )
 }
