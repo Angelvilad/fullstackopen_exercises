@@ -17,6 +17,14 @@ const create = newPerson => {
   });
 }
 
-const exportDefault = {getAll, create};
+const remove = id => {
+  return axios.delete(`${baseUrl}/${id}`)
+  .then(response => {
+    const {data} = response;
+    return data;
+  })
+}
+
+const exportDefault = {getAll, create, remove};
 
 export default exportDefault;

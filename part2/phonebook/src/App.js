@@ -30,6 +30,17 @@ const App = () => {
     setNewFilter(event.target.value);
   }
   
+  const handleClickDelete = (id, name) => {
+    const isConfirmedDelete = window.confirm(`Delete ${name}?`);
+    if (isConfirmedDelete) {
+      personsService
+      .remove(id)
+      .then(() => {
+        setPersons(prevPersons => prevPersons.filter(person => person.id !== id));
+      })
+    }
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -61,7 +72,7 @@ const App = () => {
         onChangeNumber={handleChangeNumber} valueNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={newFilter} />
+      <Persons persons={persons} filter={newFilter} onDelete={handleClickDelete}/>
     </div>
   )
 }
