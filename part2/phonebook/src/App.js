@@ -39,9 +39,13 @@ const App = () => {
     const isNameDuplicated = persons.some(person => person.name === newName);
 
     if(!isNameDuplicated) {
-      setPersons(persons.concat(newPerson));
-      setNewName('');
-      setNewNumber('');
+      axios.post('http://localhost:3001/persons', newPerson)
+      .then(response => {
+        const {data} = response;
+        setPersons(prevPersons => prevPersons.concat(data));
+        setNewName('');
+        setNewNumber('');
+      });
     } else {
       window.alert(`${newName} is already added to phonebook`);
     }
