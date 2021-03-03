@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 
 import Filter from './Filter.js';
 import PersonForm from './PersonForm.js';
 import Persons from './Persons.js';
+
+import personsService from './services/persons.js';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,11 +13,9 @@ const App = () => {
   const [ newFilter, setNewFilter ] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-    .then(response => {
-      const {data} = response;
-      setPersons(data);
-    })
+    personsService
+      .getAll()
+      .then(data => setPersons(data));
   }, []);
   
   const handleChangeName = (event) => {
@@ -39,13 +38,13 @@ const App = () => {
     const isNameDuplicated = persons.some(person => person.name === newName);
 
     if(!isNameDuplicated) {
-      axios.post('http://localhost:3001/persons', newPerson)
-      .then(response => {
-        const {data} = response;
-        setPersons(prevPersons => prevPersons.concat(data));
-        setNewName('');
-        setNewNumber('');
-      });
+      personsService
+        .create(newPerson)
+        .then(data => {
+          setPersons(prevPersons => prevPersons.concat(data));
+          setNewName('');
+          setNewNumber('');
+        })
     } else {
       window.alert(`${newName} is already added to phonebook`);
     }
