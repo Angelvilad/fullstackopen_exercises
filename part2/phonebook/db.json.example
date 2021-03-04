@@ -1,3 +1,5 @@
+# rename to db.json and use 'npm run server to deploy local json-server"
+
 {
   "persons": [
     {

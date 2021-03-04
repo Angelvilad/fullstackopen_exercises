@@ -1,6 +1,6 @@
 import Person from './Person.js';
 
-const Persons = ({persons, filter}) => {
+const Persons = ({persons, filter, onDelete:handlerClick}) => {
 
   return(
     <div>
@@ -11,7 +11,7 @@ const Persons = ({persons, filter}) => {
           if(filter === '') return true;
           return person.name.toLowerCase().includes(filter.toLowerCase());
         })
-        .map((person) => <Person key={person.name} name={person.name} number={person.number} />)
+        .map((person) => <Person key={person.id} id={person.id} name={person.name} number={person.number} onDelete={handlerClick} />)
       }
       </ul>
     </div>
