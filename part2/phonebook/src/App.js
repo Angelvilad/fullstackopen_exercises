@@ -48,16 +48,27 @@ const App = () => {
 
     const isNameDuplicated = persons.some(person => person.name === newName);
 
-    if(!isNameDuplicated) {
-      personsService
-        .create(newPerson)
-        .then(data => {
-          setPersons(prevPersons => prevPersons.concat(data));
-          setNewName('');
-          setNewNumber('');
-        })
+    if(isNameDuplicated) {
+      const isConfirmedUpdate = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+
+      if (isConfirmedUpdate) {
+        const personToUpdate = persons.find(person => person.name === newPerson.name);
+
+        personsService
+          .update(personToUpdate.id, newPerson)
+          .then (data => {
+            //console.log(persons.map(person => person.id === data.id ? data : person));
+            setPersons(prevPersons => prevPersons.map(person => person.id === data.id ? data : person));
+          });
+      }
     } else {
-      window.alert(`${newName} is already added to phonebook`);
+      personsService
+      .create(newPerson)
+      .then(data => {
+        setPersons(prevPersons => prevPersons.concat(data));
+        setNewName('');
+        setNewNumber('');
+      })
     }
   }
 
