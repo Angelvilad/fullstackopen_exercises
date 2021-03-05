@@ -1,8 +1,11 @@
+import './index.css';
+
 import React, {useState, useEffect} from 'react';
 
 import Filter from './Filter.js';
 import PersonForm from './PersonForm.js';
 import Persons from './Persons.js';
+import Alert from './Alert.js';
 
 import personsService from './services/persons.js';
 
@@ -11,6 +14,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ newFilter, setNewFilter ] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     personsService
@@ -37,6 +41,10 @@ const App = () => {
       .remove(id)
       .then(() => {
         setPersons(prevPersons => prevPersons.filter(person => person.id !== id));
+        setAlertMessage(`Deleted ${name}`);
+        setTimeout(() => {
+          setAlertMessage('');
+        }, 5000);
       })
     }
   }
@@ -57,8 +65,11 @@ const App = () => {
         personsService
           .update(personToUpdate.id, newPerson)
           .then (data => {
-            //console.log(persons.map(person => person.id === data.id ? data : person));
             setPersons(prevPersons => prevPersons.map(person => person.id === data.id ? data : person));
+            setAlertMessage(`Updated ${data.name}`);
+            setTimeout(() => {
+              setAlertMessage('');
+            }, 5000);
           });
       }
     } else {
@@ -66,6 +77,10 @@ const App = () => {
       .create(newPerson)
       .then(data => {
         setPersons(prevPersons => prevPersons.concat(data));
+        setAlertMessage(`Aded ${data.name}`);
+        setTimeout(() => {
+          setAlertMessage('');
+        }, 5000);
         setNewName('');
         setNewNumber('');
       })
@@ -83,6 +98,7 @@ const App = () => {
         onChangeNumber={handleChangeNumber} valueNumber={newNumber}
       />
       <h2>Numbers</h2>
+      <Alert message={alertMessage} />
       <Persons persons={persons} filter={newFilter} onDelete={handleClickDelete}/>
     </div>
   )
