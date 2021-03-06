@@ -1,8 +1,11 @@
+import './index.css';
+
 import React, {useState, useEffect} from 'react';
 
 import Filter from './Filter.js';
 import PersonForm from './PersonForm.js';
 import Persons from './Persons.js';
+import Alert from './Alert.js';
 
 import personsService from './services/persons.js';
 
@@ -11,6 +14,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ newFilter, setNewFilter ] = useState('');
+  const [alert, setAlert] = useState({message: '', type: ''});
 
   useEffect(() => {
     personsService
@@ -37,6 +41,10 @@ const App = () => {
       .remove(id)
       .then(() => {
         setPersons(prevPersons => prevPersons.filter(person => person.id !== id));
+        setAlert({message: `Deleted ${name}`, type: 'successful'});
+        setTimeout(() => {
+          setAlert({message: '', type: ''});
+        }, 5000);
       })
     }
   }
@@ -57,8 +65,21 @@ const App = () => {
         personsService
           .update(personToUpdate.id, newPerson)
           .then (data => {
-            //console.log(persons.map(person => person.id === data.id ? data : person));
             setPersons(prevPersons => prevPersons.map(person => person.id === data.id ? data : person));
+            setAlert({message: `Updated ${data.name}`, type:'successful'});
+            setTimeout(() => {
+              setAlert({message: '', type: ''});
+            }, 5000);
+          })
+          .catch(error => {
+            setAlert({
+              message: `Information of ${personToUpdate.name} was already been removed from server`,
+              type: 'unsuccessful'
+            });
+            setPersons(prevPerson => prevPerson.filter(person => person.id !== personToUpdate.id));
+            setTimeout(() => {
+              setAlert({message: '', type: ''});
+            }, 5000);
           });
       }
     } else {
@@ -66,6 +87,10 @@ const App = () => {
       .create(newPerson)
       .then(data => {
         setPersons(prevPersons => prevPersons.concat(data));
+        setAlert({message: `Aded ${data.name}`, type: 'successful'});
+        setTimeout(() => {
+          setAlert({message: '', type: ''});
+        }, 5000);
         setNewName('');
         setNewNumber('');
       })
@@ -83,6 +108,7 @@ const App = () => {
         onChangeNumber={handleChangeNumber} valueNumber={newNumber}
       />
       <h2>Numbers</h2>
+      <Alert message={alert.message} type={alert.type} />
       <Persons persons={persons} filter={newFilter} onDelete={handleClickDelete}/>
     </div>
   )
