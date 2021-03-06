@@ -14,7 +14,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ newFilter, setNewFilter ] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alert, setAlert] = useState({message: '', type: ''});
 
   useEffect(() => {
     personsService
@@ -41,9 +41,9 @@ const App = () => {
       .remove(id)
       .then(() => {
         setPersons(prevPersons => prevPersons.filter(person => person.id !== id));
-        setAlertMessage(`Deleted ${name}`);
+        setAlert({message: `Deleted ${name}`, type: 'successful'});
         setTimeout(() => {
-          setAlertMessage('');
+          setAlert({message: '', type: ''});
         }, 5000);
       })
     }
@@ -66,9 +66,19 @@ const App = () => {
           .update(personToUpdate.id, newPerson)
           .then (data => {
             setPersons(prevPersons => prevPersons.map(person => person.id === data.id ? data : person));
-            setAlertMessage(`Updated ${data.name}`);
+            setAlert({message: `Updated ${data.name}`, type:'successful'});
             setTimeout(() => {
-              setAlertMessage('');
+              setAlert({message: '', type: ''});
+            }, 5000);
+          })
+          .catch(error => {
+            setAlert({
+              message: `Information of ${personToUpdate.name} was already been removed from server`,
+              type: 'unsuccessful'
+            });
+            setPersons(prevPerson => prevPerson.filter(person => person.id !== personToUpdate.id));
+            setTimeout(() => {
+              setAlert({message: '', type: ''});
             }, 5000);
           });
       }
@@ -77,9 +87,9 @@ const App = () => {
       .create(newPerson)
       .then(data => {
         setPersons(prevPersons => prevPersons.concat(data));
-        setAlertMessage(`Aded ${data.name}`);
+        setAlert({message: `Aded ${data.name}`, type: 'successful'});
         setTimeout(() => {
-          setAlertMessage('');
+          setAlert({message: '', type: ''});
         }, 5000);
         setNewName('');
         setNewNumber('');
@@ -98,7 +108,7 @@ const App = () => {
         onChangeNumber={handleChangeNumber} valueNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Alert message={alertMessage} />
+      <Alert message={alert.message} type={alert.type} />
       <Persons persons={persons} filter={newFilter} onDelete={handleClickDelete}/>
     </div>
   )

@@ -1,10 +1,10 @@
-const Alert = ({message}) => {
-  if (message === '') {
+const Alert = ({message, type}) => {
+  if (message === '' || (type !== 'successful' && type !== 'unsuccessful')) {
     return null;
   }
   
   return(
-    <div className="successful">
+    <div className={type}>
       <p>{message}</p>
     </div>
   )
