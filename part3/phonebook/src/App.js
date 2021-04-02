@@ -56,32 +56,15 @@ const App = () => {
 
     const isNameDuplicated = persons.some(person => person.name === newName);
 
-    if(isNameDuplicated) {
-      const isConfirmedUpdate = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+    if(isNameDuplicated) {      
+      setAlert({
+        message: `Person ${newName} already exists`,
+        type: 'unsuccessful'
+      });
+      setTimeout(() => {
+        setAlert({message: '', type: ''});
+      }, 5000);
 
-      if (isConfirmedUpdate) {
-        const personToUpdate = persons.find(person => person.name === newPerson.name);
-
-        personsService
-          .update(personToUpdate.id, newPerson)
-          .then (data => {
-            setPersons(prevPersons => prevPersons.map(person => person.id === data.id ? data : person));
-            setAlert({message: `Updated ${data.name}`, type:'successful'});
-            setTimeout(() => {
-              setAlert({message: '', type: ''});
-            }, 5000);
-          })
-          .catch(error => {
-            setAlert({
-              message: `Information of ${personToUpdate.name} was already been removed from server`,
-              type: 'unsuccessful'
-            });
-            setPersons(prevPerson => prevPerson.filter(person => person.id !== personToUpdate.id));
-            setTimeout(() => {
-              setAlert({message: '', type: ''});
-            }, 5000);
-          });
-      }
     } else {
       personsService
       .create(newPerson)
