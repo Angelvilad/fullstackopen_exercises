@@ -57,14 +57,21 @@ const App = () => {
     const isNameDuplicated = persons.some(person => person.name === newName);
 
     if(isNameDuplicated) {      
-      setAlert({
-        message: `Person ${newName} already exists`,
-        type: 'unsuccessful'
-      });
-      setTimeout(() => {
-        setAlert({message: '', type: ''});
-      }, 5000);
-
+      const [personToUpdate] = persons.filter(person => person.name === newName);
+      
+      personsService.update(personToUpdate.id, newPerson)
+        .then(result => {
+          setPersons(prevPersons => prevPersons.map(person => person.id === result.id ? result : person));
+          setAlert({
+            message: `Person ${newName} updated`,
+            type: 'successful'
+          });
+          setTimeout(() => {
+            setAlert({message: '', type: ''});
+          }, 5000);
+          setNewName('');
+          setNewNumber('');
+        })
     } else {
       personsService
       .create(newPerson)
