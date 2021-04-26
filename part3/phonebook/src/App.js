@@ -72,6 +72,12 @@ const App = () => {
           setNewName('');
           setNewNumber('');
         })
+        .catch(error => {
+          setAlert({message: error.response.data.error, type: 'unsuccessful'});
+          setTimeout(() => {
+            setAlert({message: '', type: ''});
+          }, 5000);
+        })
     } else {
       personsService
       .create(newPerson)
@@ -83,6 +89,12 @@ const App = () => {
         }, 5000);
         setNewName('');
         setNewNumber('');
+      })
+      .catch(error => {
+        setAlert({message: error.response.data.error, type: 'unsuccessful'});
+        setTimeout(() => {
+          setAlert({message: '', type: ''});
+        }, 5000);
       })
     }
   }
