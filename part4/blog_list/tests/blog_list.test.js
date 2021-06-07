@@ -42,6 +42,28 @@ test('the unique indetifier propertie of the blog post is named id ', async() =>
     response.body.forEach(blog => expect(blog.id).toBeDefined());
 });
 
+test('making http post request creates a new blog post', async() => {
+    const newBlog = {
+        title: 'How to add a new blog',
+        author: 'Jon Doe',
+        url: 'url66',
+        likes: 78
+    };
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-type', /application\/json/)
+
+    const response = await api.get('/api/blogs');
+
+    const titles = response.body.map(blog => blog.title);
+
+    expect(response.body).toHaveLength(initialBlogs.length + 1);
+    expect(titles).toContain(newBlog.title);
+});
+
 afterAll(() => {
     server.close();
     mongoose.connection.close();
