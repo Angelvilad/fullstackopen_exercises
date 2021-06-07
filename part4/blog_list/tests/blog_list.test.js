@@ -36,6 +36,12 @@ test('notes returned are in JSON and the amount of blogs is correct', async() =>
     expect(response.body).toHaveLength(initialBlogs.length);
 });
 
+test('the unique indetifier propertie of the blog post is named id ', async() => {
+    const response = await api.get('/api/blogs');
+
+    response.body.forEach(blog => expect(blog.id).toBeDefined());
+});
+
 afterAll(() => {
     server.close();
     mongoose.connection.close();
