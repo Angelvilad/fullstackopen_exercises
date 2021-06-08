@@ -64,6 +64,24 @@ test('making http post request creates a new blog post', async() => {
     expect(titles).toContain(newBlog.title);
 });
 
+test('if likes propertie is missing from the post request, value 0 will be default', async () => {
+    const newBlog = {
+        title: 'How to add a new blog',
+        author: 'Jhon Doe',
+        url: 'url66'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog);
+    
+    const response = await api.get('/api/blogs');
+
+    const [blogWithNoLikes] = response.body.filter(blog => blog.title === newBlog.title);
+
+    expect(blogWithNoLikes.likes).toBe(0);
+});
+
 afterAll(() => {
     server.close();
     mongoose.connection.close();
