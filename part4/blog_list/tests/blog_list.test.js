@@ -82,6 +82,21 @@ test('if likes propertie is missing from the post request, value 0 will be defau
     expect(blogWithNoLikes.likes).toBe(0);
 });
 
+test(
+    'response 400 Bad request when trying to create a blog without title and url required properties', 
+    async () => {
+        const newBlog = {
+            author: 'Jon Doe',
+            likes: 78
+        };
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400);
+    }
+);
+
 afterAll(() => {
     server.close();
     mongoose.connection.close();
