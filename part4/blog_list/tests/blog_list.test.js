@@ -87,6 +87,22 @@ test('making http delete request removes a blog post', async () => {
     expect(response.body).toHaveLength(initialBlogs.length -1);
 });
 
+test('making http put request to updating "likes" field from a blog post', async () => {
+    let response = await api.get('/api/blogs');
+    const idToUpdate = response.body[0].id;
+    
+    
+    const dataToUpdate = {likes: 1978};
+    response = await api
+        .put(`/api/blogs/${idToUpdate}`)
+        .send(dataToUpdate)
+        .expect(200);
+
+    const blogUpdated = response.body;
+    
+    expect(blogUpdated.likes).toBe(dataToUpdate.likes);
+})
+
 afterAll(() => {
     server.close();
     mongoose.connection.close();
