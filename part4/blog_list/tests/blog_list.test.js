@@ -1,31 +1,8 @@
-const supertest = require('supertest');
 const mongoose = require('mongoose');
 
-const {app, server} = require('../index.js');
+const {server} = require('../index.js');
 const Blog = require('../models/blog.js');
-
-const initialBlogs = [
-    {
-        title: 'Cocina ecológica',
-        author: 'Pepe Mújica',
-        url: 'url/cocina',
-        likes: 20
-    },
-    {
-        title: 'RealoVirtual',
-        author: 'Jhon Carmack',
-        url: 'url/rov',
-        likes: 200
-    },
-    {
-        title: 'RealoVirtual',
-        author: 'Jhon Carmack',
-        url: 'url/rov',
-        likes: 200
-    }
-];
-
-const api = supertest(app);
+const {api, initialBlogs} = require('./helpers.js');
 
 test('notes returned are in JSON and the amount of blogs is correct', async() => {
     const response = await api
@@ -96,6 +73,19 @@ test(
             .expect(400);
     }
 );
+
+test('making http delete request removes a blog post', async () => {
+    let response = await api.get('/api/blogs');
+    const idToRemove = response.body[0].id;
+
+    await api
+        .delete(`/api/blogs/${idToRemove}`)
+        .expect(204);
+
+    response = await api.get('/api/blogs');
+
+    expect(response.body).toHaveLength(initialBlogs.length -1);
+});
 
 afterAll(() => {
     server.close();
